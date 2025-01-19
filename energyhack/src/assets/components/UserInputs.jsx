@@ -6,11 +6,10 @@ function UserInputs({ onCarDetailsChange }) {
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
 
-  // Debounced function to pass car details to the parent
   const debouncedCarDetailsChange = useCallback(
     debounce((updatedDetails) => {
       onCarDetailsChange(updatedDetails);
-    }, 300), // Adjust the debounce delay as needed (300ms is common)
+    }, 300),
     []
   );
 
@@ -28,7 +27,6 @@ function UserInputs({ onCarDetailsChange }) {
       updatedDetails = { ...updatedDetails, model: value };
     }
 
-    // Pass the updated details to the debounced function
     debouncedCarDetailsChange(updatedDetails);
   };
 

@@ -8,6 +8,7 @@ const Map = ({ onDistanceChange }) => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [mapKey, setMapKey] = useState(0);
   const [distance, setDistance] = useState(null);
+  const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
   const containerStyle = {
     width: '100%',
@@ -23,13 +24,12 @@ const Map = ({ onDistanceChange }) => {
     if (result && result.status === 'OK') {
       setDirections(result);
       // Extracting the distance from the route (in meters)
-      const routeDistance = result.routes[0].legs[0].distance.value; // Distance in meters
-      const distanceInMiles = routeDistance / 1609.34; // Convert meters to miles
-      setDistance(distanceInMiles.toFixed(2)); // Store the distance in miles (rounded to 2 decimal places)
+      const routeDistance = result.routes[0].legs[0].distance.value;
+      const distanceInMiles = routeDistance / 1609.34;
+      setDistance(distanceInMiles.toFixed(2));
 
-      // Call the parent callback to send the distance data
       if (onDistanceChange) {
-        onDistanceChange(distanceInMiles.toFixed(2)); // Pass the distance to the parent
+        onDistanceChange(distanceInMiles.toFixed(2));
       }
 
       setIsCalculating(false);
@@ -43,8 +43,8 @@ const Map = ({ onDistanceChange }) => {
     if (origin && destination) {
       setIsCalculating(true);
       setDirections(null);
-      setDistance(null); // Clear previous distance when calculating a new route
-      setMapKey(prevKey => prevKey + 1); // Force re-render of the map
+      setDistance(null);
+      setMapKey(prevKey => prevKey + 1);
     }
   };
 
@@ -73,7 +73,7 @@ const Map = ({ onDistanceChange }) => {
         </button>
       </div>
 
-      <LoadScript googleMapsApiKey= "AIzaSyCndVsSm4eXPGetOCDRd1Cj7gPeYff-wj8" libraries={['places']}>
+      <LoadScript googleMapsApiKey= {googleMapsApiKey} libraries={['places']}>
         <GoogleMap
           key={mapKey}
           mapContainerStyle={containerStyle}
@@ -95,7 +95,6 @@ const Map = ({ onDistanceChange }) => {
         </GoogleMap>
       </LoadScript>
 
-      {/* Distance display moved below the map */}
       {distance && (
         <div className="mt-4 text-lg text-instrument">
           <p>Distance: {distance} miles</p>

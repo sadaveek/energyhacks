@@ -4,6 +4,7 @@ function CarbonEmissions({ distance, carDetails }) {
   const [carbonEmissions, setCarbonEmissions] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const carbonInterfaceApiKey = import.meta.env.VITE_CARBON_INTERFACE_API_KEY;
 
   useEffect(() => {
     if (distance && carDetails.year && carDetails.make && carDetails.model) {
@@ -16,11 +17,10 @@ function CarbonEmissions({ distance, carDetails }) {
       setLoading(true);
       setError(null);
   
-      // Step 1: Fetch vehicle makes
       const makesResponse = await fetch("https://www.carboninterface.com/api/v1/vehicle_makes", {
         method: "GET",
         headers: {
-          Authorization: `Bearer JbqDzC7czGwKxVJ9WK62A`,  // Corrected here
+          Authorization: `Bearer ${carbonInterfaceApiKey}`,
           "Content-Type": "application/json",
         },
       });
@@ -30,22 +30,19 @@ function CarbonEmissions({ distance, carDetails }) {
       }
   
       const makesData = await makesResponse.json();
-      console.log("Vehicle Makes Data:", makesData); // Log the makes data for debugging
   
-      // Find the make ID for the specified car make
       const make = makesData.find((m) => m.data.attributes.name.toLowerCase() === carDetails.make.toLowerCase());
   
       if (!make) {
         throw new Error(`Vehicle make "${carDetails.make}" not found.`);
       }
   
-      // Step 2: Fetch vehicle models for the selected make
       const modelsResponse = await fetch(
         `https://www.carboninterface.com/api/v1/vehicle_makes/${make.data.id}/vehicle_models`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer JbqDzC7czGwKxVJ9WK62A`,  // Corrected here
+            Authorization: `Bearer ${carbonInterfaceApiKey}`,
             "Content-Type": "application/json",
           },
         }
@@ -56,7 +53,6 @@ function CarbonEmissions({ distance, carDetails }) {
       }
   
       const modelsData = await modelsResponse.json();
-      console.log("Vehicle Models Data:", modelsData); // Log the models data for debugging
   
       const model = modelsData.find(
         (m) =>
@@ -70,7 +66,6 @@ function CarbonEmissions({ distance, carDetails }) {
         );
       }
   
-      // Step 3: Fetch carbon emissions using vehicle_model_id
       fetchCarbonEmissions(distance, model.data.id);
     } catch (err) {
       setError(err.message);
@@ -87,7 +82,7 @@ function CarbonEmissions({ distance, carDetails }) {
       const response = await fetch("https://www.carboninterface.com/api/v1/estimates", {
         method: "POST",
         headers: {
-          Authorization: `Bearer JbqDzC7czGwKxVJ9WK62A`,  // Corrected here
+          Authorization: `Bearer ${carbonInterfaceApiKey}`,  // Corrected here
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
