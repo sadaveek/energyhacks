@@ -3,7 +3,7 @@ import Responsive from './assets/components/Reponsive'
 
 function App() {
   return (
-    <div className = "h-full w-full mt-auto mb-auto">
+    <div className = "h-screen w-screen">
       <NavBar></NavBar>
       <Responsive></Responsive>
     </div>

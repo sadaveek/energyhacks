@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleMap, LoadScript, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 
-const Map = () => {
+const Map = ({ onDistanceChange }) => {
   const [directions, setDirections] = useState(null);
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [isCalculating, setIsCalculating] = useState(false);
   const [mapKey, setMapKey] = useState(0);
-  const [distance, setDistance] = useState(null); // State for storing the distance
+  const [distance, setDistance] = useState(null);
 
   const containerStyle = {
     width: '100%',
@@ -26,12 +26,18 @@ const Map = () => {
       const routeDistance = result.routes[0].legs[0].distance.value; // Distance in meters
       const distanceInMiles = routeDistance / 1609.34; // Convert meters to miles
       setDistance(distanceInMiles.toFixed(2)); // Store the distance in miles (rounded to 2 decimal places)
+
+      // Call the parent callback to send the distance data
+      if (onDistanceChange) {
+        onDistanceChange(distanceInMiles.toFixed(2)); // Pass the distance to the parent
+      }
+
       setIsCalculating(false);
     } else {
       console.error('Error fetching directions:', result);
       setIsCalculating(false);
     }
-  }, []);
+  }, [onDistanceChange]);
 
   const handleRouteCalculation = () => {
     if (origin && destination) {
@@ -43,7 +49,7 @@ const Map = () => {
   };
 
   return (
-    <div className="w-full h-[800px] flex flex-col items-center space-y-4 p-4">
+    <div className="w-full h-[650px] flex flex-col items-center space-y-4 p-4 animate-fade animate-duration-1000 font-instrument">
       <div className="flex space-x-4">
         <input
           type="text"
@@ -67,7 +73,7 @@ const Map = () => {
         </button>
       </div>
 
-      <LoadScript googleMapsApiKey="AIzaSyCndVsSm4eXPGetOCDRd1Cj7gPeYff-wj8" libraries={['places']}>
+      <LoadScript googleMapsApiKey= "AIzaSyCndVsSm4eXPGetOCDRd1Cj7gPeYff-wj8" libraries={['places']}>
         <GoogleMap
           key={mapKey}
           mapContainerStyle={containerStyle}
