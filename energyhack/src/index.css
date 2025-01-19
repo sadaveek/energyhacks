@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.navbar-elements {
+    @apply cursor-pointer
+    hover:scale-[105%] duration-200
+    active:scale-[101%] select-none;
+}
