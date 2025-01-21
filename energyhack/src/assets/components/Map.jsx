@@ -12,7 +12,7 @@ const Map = ({ onDistanceChange }) => {
 
   const containerStyle = {
     width: '100%',
-    height: '500px',
+    height: '100%',
   };
 
   const center = {
@@ -23,7 +23,6 @@ const Map = ({ onDistanceChange }) => {
   const handleDirectionsResponse = useCallback((result) => {
     if (result && result.status === 'OK') {
       setDirections(result);
-      // Extracting the distance from the route (in meters)
       const routeDistance = result.routes[0].legs[0].distance.value;
       const distanceInMiles = routeDistance / 1609.34;
       setDistance(distanceInMiles.toFixed(2));
@@ -49,8 +48,8 @@ const Map = ({ onDistanceChange }) => {
   };
 
   return (
-    <div className="w-full h-[650px] flex flex-col items-center space-y-4 p-4 animate-fade animate-duration-1000 font-instrument">
-      <div className="flex space-x-4">
+    <div className="w-full h-[80vh] flex flex-col items-center space-y-4 p-4 animate-fade animate-duration-1000 font-instrument">
+      <div className="flex space-x-4 select-none">
         <input
           type="text"
           placeholder="Enter origin"
@@ -63,11 +62,11 @@ const Map = ({ onDistanceChange }) => {
           placeholder="Enter destination"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
-          className="w-72 p-2 rounded-md border border-gray-300"
+          className="w-72 p-2 rounded-md border border-gray-300 select-none"
         />
         <button
           onClick={handleRouteCalculation}
-          className="bg-palette4 text-white p-2 rounded-md"
+          className="bg-palette4 text-white p-2 rounded-md navbar-elements select-none"
         >
           Calculate Route
         </button>
